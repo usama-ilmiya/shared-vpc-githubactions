@@ -36,6 +36,4 @@ resource "google_compute_network" "vpc2_network" {
   lifecycle {
     ignore_changes = [name]
   }
-
-  depends_on = [google_compute_network.vpc1_network]
 }
