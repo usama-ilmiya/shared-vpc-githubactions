@@ -27,3 +27,4 @@ resource "google_compute_network" "vpc1_network" {
     ignore_changes = [name]
   }
 }
+ 
