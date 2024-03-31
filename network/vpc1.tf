@@ -26,6 +26,7 @@
 
 
 # ///////////////////////////////////////  OR 
+
 variable "vpc1_name" {
   default = "vpc1-ilmiya"
 }
