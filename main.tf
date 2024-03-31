@@ -12,3 +12,4 @@ module "vpc2" {
   source    = "./network"
   vpc2_name = "my_vpc_2"
 }
+ 

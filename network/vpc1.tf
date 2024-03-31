@@ -8,3 +8,4 @@ resource "google_compute_network" "vpc1_network" {
 }
 
 # Define other resources like subnets, firewall rules, etc., as needed.
+
