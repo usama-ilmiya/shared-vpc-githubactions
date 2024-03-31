@@ -41,6 +41,7 @@ resource "google_compute_network" "vpc1_network" {
 }
 
 data "google_compute_network" "existing_vpc1" {
-  count = google_compute_network.vpc1_network.id != "" ? 1 : 0
-  name  = var.vpc1_name
+  depends_on = [google_compute_network.vpc1_network]
+  count      = length(google_compute_network.vpc1_network[*].id) > 0 ? 1 : 0
+  name       = var.vpc1_name
 }
