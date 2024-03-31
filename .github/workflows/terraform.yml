@@ -17,12 +17,15 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: latest
+          terraform_version: 1.0.0
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v0
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Change to Terraform directory
+        run: cd terraform-project
 
       - name: Terraform Init
         run: terraform init
