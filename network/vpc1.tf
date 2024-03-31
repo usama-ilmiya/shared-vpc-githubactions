@@ -9,24 +9,6 @@
 
 
 # /////////////////////////////////////////   OR
-
-
-#variable "vpc1_name" {
-#  default = "vpc1-ilmiya"
-#}
-
-#resource "google_compute_network" "vpc1_network" {
-#  name                    = var.vpc1_name
-#  auto_create_subnetworks = false
-
-#  lifecycle {
-#    ignore_changes = [name]
-#  }
-#}
-
-
-# ///////////////////////////////////////  OR 
-
 variable "vpc1_name" {
   default = "vpc1-ilmiya"
 }
@@ -38,10 +20,4 @@ resource "google_compute_network" "vpc1_network" {
   lifecycle {
     ignore_changes = [name]
   }
-}
-
-data "google_compute_network" "existing_vpc1" {
-  depends_on = [google_compute_network.vpc1_network]
-  count      = length(google_compute_network.vpc1_network[*].id) > 0 ? 1 : 0
-  name       = var.vpc1_name
 }
