@@ -1,3 +1,16 @@
+#variable "vpc1_name" {
+#  default = "vpc1-ilmiya"
+#}
+
+#resource "google_compute_network" "vpc1_network" {
+#  name                    = var.vpc1_name
+#  auto_create_subnetworks = false
+#}
+
+
+# OR
+
+
 variable "vpc1_name" {
   default = "vpc1-ilmiya"
 }
@@ -5,4 +18,8 @@ variable "vpc1_name" {
 resource "google_compute_network" "vpc1_network" {
   name                    = var.vpc1_name
   auto_create_subnetworks = false
+
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
