@@ -1,18 +1,11 @@
-variable "vpc2_name" {
-  default = "vpc2-ilmiya"
-}
-
-data "google_compute_network" "existing_vpc2" {
-  name = var.vpc2_name
-}
+variable "vpc_name" {}
 
 resource "google_compute_network" "vpc2_network" {
-  name                    = var.vpc2_name
+  count                  = var.create_vpc ? 1 : 0
+  name                   = var.vpc_name
   auto_create_subnetworks = false
 
   lifecycle {
     ignore_changes = [name]
   }
-
-  depends_on = [data.google_compute_network.existing_vpc2]
 }

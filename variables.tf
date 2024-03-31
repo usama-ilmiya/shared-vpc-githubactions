@@ -9,11 +9,11 @@ variable "region" {
 }
 
 variable "vpc1_name" {
-  description = "Name of VPC1"
+  description = "Name of VPC1."
   default     = "vpc1-ilmiya"
 }
 
 variable "vpc2_name" {
-  description = "Name of VPC2"
+  description = "Name of VPC2."
   default     = "vpc2-ilmiya"
 }
