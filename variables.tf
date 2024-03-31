@@ -1,19 +1,23 @@
+variable "credentials_file" {
+  description = "Path to the Google Cloud service account key file"
+}
+
 variable "project_id" {
-  description = "The ID of the GCP project."
-  default     = "gmzdev"
+  description = "Google Cloud project ID"
 }
 
 variable "region" {
-  description = "The region to deploy resources in."
-  default     = "us-central1"
+  description = "Google Cloud region"
 }
 
-variable "vpc1_name" {
-  description = "Name of VPC1."
-  default     = "vpc1-ilmiya"
+variable "network_name" {
+  description = "Name of the VPC network"
 }
 
-variable "vpc2_name" {
-  description = "Name of VPC2."
-  default     = "vpc2-ilmiya"
+variable "subnet_name" {
+  description = "Name of the subnet"
+}
+
+variable "subnet_cidr" {
+  description = "CIDR range for the subnet"
 }

@@ -1,24 +1,19 @@
 provider "google" {
-  project = var.project_id
-  region  = var.region
+  credentials = file(var.credentials_file)
+  project     = var.project_id
+  region      = var.region
 }
 
-data "google_compute_network" "existing_vpc1" {
-  name = var.vpc1_name
+resource "google_compute_network" "vpc_network" {
+  name                    = var.network_name
+  auto_create_subnetworks = false
 }
 
-data "google_compute_network" "existing_vpc2" {
-  name = var.vpc2_name
+resource "google_compute_subnetwork" "subnet" {
+  name          = var.subnet_name
+  region        = var.region
+  network       = google_compute_network.vpc_network.self_link
+  ip_cidr_range = var.subnet_cidr
 }
 
-module "vpc1" {
-  source     = "./network"
-  vpc_name   = var.vpc1_name
-  create_vpc = length(data.google_compute_network.existing_vpc1) == 0 ? true : false
-}
-
-module "vpc2" {
-  source     = "./network"
-  vpc_name   = var.vpc2_name
-  create_vpc = length(data.google_compute_network.existing_vpc2) == 0 ? true : false
-}
+# Define other resources like firewall rules, etc.

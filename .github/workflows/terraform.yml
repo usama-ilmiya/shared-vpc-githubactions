@@ -1,34 +1,41 @@
-name: Terraform Deployment
-
+name: Deploy GCP VPC
 on:
   push:
     branches:
       - main
 
 jobs:
-  terraform:
-    name: Deploy
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: latest
-
-      - name: Configure Google Cloud credentials
+      - name: Authenticate with GCP
         uses: google-github-actions/auth@v0
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan
+      - name: Check if Network Exists
+        run: |
+          # Your script to check if the network exists
+          # If it exists, set a flag or variable to indicate that
+          # Otherwise, proceed to create the network
+          # Example: check_network_existence.sh
 
-      - name: Terraform Apply
+      - name: Terraform Apply/Create Network
+        if: ${{ success() }}
+        run: terraform apply -auto-approve
+
+      - name: Check if Network is Created/Updated
+        if: ${{ success() }}
+        run: |
+          # Your script to verify if the network was successfully created/updated
+          # Example: check_network_status.sh
+
+      - name: Terraform Apply/Update Resources
+        if: ${{ success() }}
         run: terraform apply -auto-approve
