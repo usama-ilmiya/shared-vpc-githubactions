@@ -1,9 +1,9 @@
-variable "vpc_name" {
+variable "vpc2_name" {
   default = "my_vpc_2"
 }
 
-resource "google_compute_network" "vpc_network" {
-  name                    = var.vpc_name
+resource "google_compute_network" "vpc2_network" {
+  name                    = var.vpc2_name
   auto_create_subnetworks = false
 }
 

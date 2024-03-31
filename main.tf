@@ -4,11 +4,11 @@ provider "google" {
 }
 
 module "vpc1" {
-  source   = "./network"
-  vpc_name = "my_vpc_1"
+  source    = "./network"
+  vpc1_name = "my_vpc_1"
 }
 
 module "vpc2" {
-  source   = "./network"
-  vpc_name = "my_vpc_2"
+  source    = "./network"
+  vpc2_name = "my_vpc_2"
 }
