@@ -1,4 +1,4 @@
-name: Terraform Deploy
+name: Terraform Deployment
 
 on:
   push:
@@ -7,43 +7,29 @@ on:
 
 jobs:
   terraform:
+    name: Deploy
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Terraform
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: latest
 
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Check if network exists
-        id: check_network
-        run: |
-          network_exist=$(terraform output -json | jq -r '.shared_vpc_self_link.value')
-          if [[ $network_exist == "null" ]]; then
-            echo "::set-output name=network_exists::false"
-          else
-            echo "::set-output name=network_exists::true"
-          fi
-
       - name: Terraform Plan
-        if: steps.check_network.outputs.network_exists == 'false'
-        run: terraform plan -out=tfplan -input=false
-
-      - name: Terraform Apply/Create
-        if: steps.check_network.outputs.network_exists == 'false'
-        run: terraform apply -input=false tfplan
-
-      - name: Terraform Apply/Update
-        if: steps.check_network.outputs.network_exists == 'true'
-        run: terraform apply -input=false
-
-      - name: Terraform Show Output
-        run: terraform output
+        run: terraform plan -out=tfplan
+      
+      - name: Terraform Apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve tfplan
