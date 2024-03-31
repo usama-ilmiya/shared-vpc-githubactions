@@ -1,41 +1,49 @@
-name: Deploy GCP VPC
+name: Terraform Deploy
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v0
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          terraform_version: latest
+
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Check if Network Exists
+      - name: Check if network exists
+        id: check_network
         run: |
-          # Your script to check if the network exists
-          # If it exists, set a flag or variable to indicate that
-          # Otherwise, proceed to create the network
-          # Example: check_network_existence.sh
+          network_exist=$(terraform output -json | jq -r '.shared_vpc_self_link.value')
+          if [[ $network_exist == "null" ]]; then
+            echo "::set-output name=network_exists::false"
+          else
+            echo "::set-output name=network_exists::true"
+          fi
 
-      - name: Terraform Apply/Create Network
-        if: ${{ success() }}
-        run: terraform apply -auto-approve
+      - name: Terraform Plan
+        if: steps.check_network.outputs.network_exists == 'false'
+        run: terraform plan -out=tfplan -input=false
 
-      - name: Check if Network is Created/Updated
-        if: ${{ success() }}
-        run: |
-          # Your script to verify if the network was successfully created/updated
-          # Example: check_network_status.sh
+      - name: Terraform Apply/Create
+        if: steps.check_network.outputs.network_exists == 'false'
+        run: terraform apply -input=false tfplan
 
-      - name: Terraform Apply/Update Resources
-        if: ${{ success() }}
-        run: terraform apply -auto-approve
+      - name: Terraform Apply/Update
+        if: steps.check_network.outputs.network_exists == 'true'
+        run: terraform apply -input=false
+
+      - name: Terraform Show Output
+        run: terraform output
