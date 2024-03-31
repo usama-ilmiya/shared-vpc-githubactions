@@ -1,5 +1,5 @@
 variable "vpc1_name" {
-  default = "vpc_1_ilmiya"
+  default = "vpc1-ilmiya"
 }
 
 resource "google_compute_network" "vpc1_network" {
